@@ -1,0 +1,11 @@
+{
+  "name": "hostelkart-1",
+  "version": "1.0.0",
+  "description": "A full stack ptoject on hostel item exchange",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "\"Dushyant singh\"",
+  "license": "ISC"
+}
