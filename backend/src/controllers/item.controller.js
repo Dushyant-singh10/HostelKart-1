@@ -23,12 +23,12 @@ export const addItem = async (req, res) => {
         name,
         description,
         price,
-        hostelId: hostelId,
+        hostelId,
       },
     });
     res.status(201).json(newItem);
   } catch (err) {
-    console.error(err);
+    console.error("Error creating item:", err);    
     res.status(500).json({ message: "Failed to add item" });
   }
 };

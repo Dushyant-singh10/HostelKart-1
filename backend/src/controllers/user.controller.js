@@ -1,24 +1,41 @@
-const User = require('../models/User.model');
-const Item = require('../models/Item.model');
+import { PrismaClient } from '../generated/prisma/index.js';
+const prisma = new PrismaClient();
 
 // GET /api/users/profile
-exports.getProfile = async (req, res) => {
-    try {
-        const user = await User.findById(req.user.id).select('-password');
-        if (!user) return res.status(404).json({ message: 'User not found' });
+export const getProfile = async (req, res) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: req.user.id },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
+        // Exclude password
+      },
+    });
 
-        res.status(200).json({ success: true, user });
-    } catch (err) {
-        res.status(500).json({ message: 'Error fetching profile' });
-    }
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    res.status(200).json({ success: true, user });
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching profile' });
+  }
 };
 
 // GET /api/users/items
-exports.getMyItems = async (req, res) => {
-    try {
-        const items = await Item.find({ owner: req.user.id });
-        res.status(200).json(items);
-    } catch (err) {
-        res.status(500).json({ message: 'Could not fetch your items' });
-    }
+export const getMyItems = async (req, res) => {
+  try {
+    const items = await prisma.item.findMany({
+      where: {
+        ownerId: req.user.id,
+      },
+    });
+
+    res.status(200).json(items);
+  } catch (err) {
+    res.status(500).json({ message: 'Could not fetch your items' });
+  }
 };
