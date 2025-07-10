@@ -6,12 +6,12 @@ import {
 } from "../controllers/item.controller.js";
 import { Router } from "express";
 
-export const userRouter = Router();
+export const itemRouter = Router();
 
-userRouter.post("/addItems", addItem);
-userRouter.get("/:hostelId", getItems);
-userRouter.put("/updateItem/:itemId", updateItem);
-userRouter.delete("/deleteItem/:itemId", deleteItem);
-userRouter.get("/", (req, res) => {
+itemRouter.post("/addItems", addItem);
+itemRouter.get("/:hostelId", getItems);
+itemRouter.put("/updateItem/:itemId", updateItem);
+itemRouter.delete("/deleteItem/:itemId", deleteItem);
+itemRouter.get("/", (req, res) => {
   res.send("Welcome to the Item API");
 });
