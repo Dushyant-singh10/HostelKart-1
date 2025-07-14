@@ -1,53 +1,90 @@
 import { PrismaClient } from "../generated/prisma/index.js";
 const prisma = new PrismaClient();
 
+/**
+ * GET all items by hostelId
+ */
 export const getItems = async (req, res) => {
+  const { hostelId } = req.params;
+  console.log(" Fetching items for hostelId:", hostelId, "| Type:", typeof hostelId);
+
   try {
     const items = await prisma.item.findMany({
-      where: { hostelId: req.params.hostelId },
-      include: { hostel: true },
+      where: { hostelId: hostelId }, // hostelId is string
     });
+
+    console.log("Items found:", items.length);
     res.status(200).json(items);
   } catch (err) {
+    console.error(" Error fetching items:");
+    console.error("Message:", err.message);
+    console.error("Stack:", err.stack);
+    console.error("Full:", JSON.stringify(err, null, 2));
     res.status(500).json({ message: "Failed to fetch items" });
   }
 };
 
+/**
+ * POST: Add new item under a hostelId
+ */
 export const addItem = async (req, res) => {
-  const { name, description, price } = req.body;
   const { hostelId } = req.params;
+  const { name, description, price } = req.body;
+
+  if (!name || !description || !price || !hostelId) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
 
   try {
     const newItem = await prisma.item.create({
       data: {
         name,
         description,
-        price,
-        hostelId,
+        price: Number(price),
+        hostelId: hostelId, // string
       },
     });
+
     res.status(201).json(newItem);
   } catch (err) {
-    console.error("Error creating item:", err);    
+    console.error(" Error creating item:", err.message);
+    console.error("Stack:", err.stack);
     res.status(500).json({ message: "Failed to add item" });
   }
 };
 
+/**
+ * PUT: Update an existing item by itemId
+ */
 export const updateItem = async (req, res) => {
   const { itemId } = req.params;
   const { name, description, price } = req.body;
 
+  if (!name || !description || !price) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
+
   try {
     const updatedItem = await prisma.item.update({
       where: { id: parseInt(itemId) },
-      data: { name, description, price },
+      data: {
+        name,
+        description,
+        price: Number(price),
+      },
     });
+
     res.status(200).json(updatedItem);
   } catch (err) {
+    console.error(" Error updating item:", err.message);
+    console.error("Stack:", err.stack);
     res.status(500).json({ message: "Failed to update item" });
   }
 };
 
+/**
+ * DELETE: Delete item by itemId
+ */
 export const deleteItem = async (req, res) => {
   const { itemId } = req.params;
 
@@ -55,8 +92,11 @@ export const deleteItem = async (req, res) => {
     await prisma.item.delete({
       where: { id: parseInt(itemId) },
     });
+
     res.status(200).json({ message: "Item deleted successfully" });
   } catch (err) {
+    console.error(" Error deleting item:", err.message);
+    console.error("Stack:", err.stack);
     res.status(500).json({ message: "Failed to delete item" });
   }
 };

@@ -1,8 +1,11 @@
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
+import dotenv from 'dotenv';
+dotenv.config(); // at the top of your main file, like app.js or index.js
 
-import { itemRouter } from "./routes/itemRoutes.js"; 
+
+import { itemRouter } from "./routes/item.routes.js"; 
 import { userRouter } from "./routes/user.routes.js"; 
 
 const app = express();
