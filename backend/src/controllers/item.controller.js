@@ -31,6 +31,10 @@ export const addItem = async (req, res) => {
   const { hostelId } = req.params;
   const { name, description, price } = req.body;
 
+  console.log("  Received in addItem:");
+  console.log("hostelId:", hostelId, "type:", typeof hostelId);
+  console.log("name:", name, "| description:", description, "| price:", price);
+
   if (!name || !description || !price || !hostelId) {
     return res.status(400).json({ message: "All fields are required" });
   }
@@ -41,17 +45,19 @@ export const addItem = async (req, res) => {
         name,
         description,
         price: Number(price),
-        hostelId: hostelId, // string
+        hostelId,
       },
     });
 
+    console.log("✅ Item created:", newItem);
     res.status(201).json(newItem);
   } catch (err) {
-    console.error(" Error creating item:", err.message);
-    console.error("Stack:", err.stack);
+    console.error("❌ Error creating item:", err.message);
+    console.error("📦 Full Error:", err);
     res.status(500).json({ message: "Failed to add item" });
   }
 };
+
 
 /**
  * PUT: Update an existing item by itemId
@@ -66,7 +72,7 @@ export const updateItem = async (req, res) => {
 
   try {
     const updatedItem = await prisma.item.update({
-      where: { id: parseInt(itemId) },
+      where: { id: (itemId) },
       data: {
         name,
         description,
@@ -85,18 +91,36 @@ export const updateItem = async (req, res) => {
 /**
  * DELETE: Delete item by itemId
  */
+
+
 export const deleteItem = async (req, res) => {
-  const { itemId } = req.params;
+  const { itemId } = req.params; // Changed from itemId to id
+  console.log("Attempting to delete item with ID:", itemId, "Type:", typeof itemId);
 
   try {
-    await prisma.item.delete({
-      where: { id: parseInt(itemId) },
+    // Add validation for the ID
+    if (!itemId) {
+      return res.status(400).json({ message: "Item ID is required" });
+    }
+
+    const deletedItem = await prisma.item.delete({
+      where: { id: itemId },
     });
 
-    res.status(200).json({ message: "Item deleted successfully" });
+    res.status(200).json({ 
+      message: "Item deleted successfully",
+      deletedItem: deletedItem 
+    });
   } catch (err) {
-    console.error(" Error deleting item:", err.message);
+    console.error("Error deleting item:", err.message);
     console.error("Stack:", err.stack);
+    
+    // More specific error handling
+    if (err.code === 'P2025') {
+      return res.status(404).json({ message: "Item not found" });
+    }
+    
     res.status(500).json({ message: "Failed to delete item" });
   }
 };
+

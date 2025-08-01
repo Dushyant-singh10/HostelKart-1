@@ -6,7 +6,7 @@ dotenv.config(); // at the top of your main file, like app.js or index.js
 
 
 import { itemRouter } from "./routes/item.routes.js"; 
-import { userRouter } from "./routes/user.routes.js"; 
+import { userRouter } from "./routes/userRoutes.js"; 
 
 const app = express();
 
