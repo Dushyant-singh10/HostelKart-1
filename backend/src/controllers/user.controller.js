@@ -88,7 +88,7 @@ export const getProfile = async (req, res) => {
 // GET /api/users/items
 export const getMyItems = async (req, res) => {
   try {
-    const items = await Item.find({ owner: req.user.id });
+    const items = await items.find({ owner: req.user.id });
     res.status(200).json(items);
   } catch (err) {
     res.status(500).json({ message: "Could not fetch your items" });
