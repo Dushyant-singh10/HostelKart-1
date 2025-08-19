@@ -53,10 +53,10 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
+    <div className="min-h-screen relative bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
       {/* Background Pattern */}
-      <div className="absolute inset-0 bg-white/10 backdrop-blur-3xl"></div>
-      <div className="absolute inset-0 bg-gradient-to-r from-blue-400/10 via-purple-400/10 to-pink-400/10"></div>
+      <div className="min-h-screen fixed inset-0 bg-white/10 backdrop-blur-3xl"></div>
+      <div className="min-h-screen fixed inset-0 bg-gradient-to-r from-blue-400/10 via-purple-400/10 to-pink-400/10"></div>
       
       <div className="relative w-full max-w-md">
         {/* Logo/Brand */}
@@ -262,9 +262,14 @@ const SignupPage = () => {
             <div className="mt-6 text-center">
               <p className="text-gray-600">
                 Already have an account? 
-                <a href="#" className="text-blue-600 hover:text-blue-700 font-semibold transition-colors ml-1">
+                <button
+                  className="text-blue-600 hover:text-blue-700 cursor-pointer font-semibold transition-colors ml-1"
+                  onClick={() => {
+                    window.location.href = '/';
+                  }}
+                >
                   Sign In
-                </a>
+                </button>
               </p>
             </div>
           </div>
